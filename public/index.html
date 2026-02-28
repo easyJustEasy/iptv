@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>电视直播导航</title>
+    <style>
+      :root {
+        --primary-color: #4a90e2;
+        --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        --card-bg: #ffffff;
+        --text-main: #333333;
+        --shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        --radius: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        background: var(--bg-gradient);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 40px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      header h1 {
+        color: var(--text-main);
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+
+      header p {
+        color: #666;
+        font-size: 0.9rem;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 5px 15px;
+        border-radius: 20px;
+        display: inline-block;
+      }
+
+      /* 刷新按钮样式 */
+      .refresh-btn {
+        position: absolute;
+        top: 0;
+        right: -100px; /* 默认在标题右侧，移动端调整 */
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s;
+        box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+      }
+
+      .refresh-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+      }
+
+      .refresh-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        width: 90%;
+        max-width: 1000px;
+        padding-bottom: 50px;
+      }
+
+      .channel-card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .channel-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(74, 144, 226, 0.25);
+        border-color: var(--primary-color);
+      }
+
+      .icon-box {
+        width: 70px;
+        height: 70px;
+        background: #f0f7ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        transition: transform 0.3s ease;
+      }
+
+      .channel-card:hover .icon-box {
+        transform: scale(1.1) rotate(5deg);
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .channel-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 8px;
+      }
+
+      .channel-desc {
+        font-size: 0.85rem;
+        color: #888;
+        line-height: 1.4;
+        word-break: break-all;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        max-width: 100%;
+      }
+
+      .play-btn {
+        margin-top: 20px;
+        padding: 8px 20px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+      }
+
+      .channel-card:hover .play-btn {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* 加载和错误状态 */
+      .status-message {
+        text-align: center;
+        color: #666;
+        font-size: 1.1rem;
+        grid-column: 1 / -1;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: var(--radius);
+      }
+
+      .error-message {
+        color: #d32f2f;
+        background: #ffebee;
+        border: 1px solid #ffcdd2;
+      }
+
+      /* 移动端适配 */
+      @media (max-width: 600px) {
+        .refresh-btn {
+          position: static;
+          margin: 15px auto 0;
+          right: auto;
+        }
+        header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>📺 电视直播导航</h1>
+      <p>由于版权和安全策略，直播将在新标签页中打开</p>
+      <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">
+        <span>🔄</span> 更新数据
+      </button>
+    </header>
+
+    <div class="container" id="channelList">
+      <div class="status-message">正在加载数据...</div>
+    </div>
+
+    <script>
+      const container = document.getElementById("channelList");
+      const refreshBtn = document.getElementById("refreshBtn");
+
+      // 从 API 加载数据
+      async function loadChannels() {
+        container.innerHTML =
+          '<div class="status-message">正在加载数据...</div>';
+
+        try {
+          const response = await fetch("/api/channels");
+
+          if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.message || "加载失败");
+          }
+
+          const channels = await response.json();
+
+          if (!channels || channels.length === 0) {
+            container.innerHTML = `
+              <div class="status-message">
+                暂无数据。<br>
+                请点击右上角的 "更新数据" 按钮进行抓取。
+              </div>`;
+            return;
+          }
+
+          renderCards(channels);
+        } catch (error) {
+          container.innerHTML = `
+            <div class="status-message error-message">
+              ❌ 加载失败: ${error.message}<br>
+              <small>请确保后端服务已启动，且已运行过爬虫脚本。</small>
+            </div>`;
+        }
+      }
+
+      function renderCards(channels) {
+        container.innerHTML = ""; // 清空加载提示
+
+        channels.forEach((ch) => {
+          const card = document.createElement("div");
+          card.className = "channel-card";
+
+          // 点击事件：新窗口打开
+          card.onclick = () => {
+            window.open(ch.url, "_blank");
+          };
+
+          // 如果没有描述，使用 URL 的后半部分或者默认文本
+          const descText =
+            ch.desc ||
+            (ch.url.length > 50 ? ch.url.substring(0, 50) + "..." : ch.url);
+
+          card.innerHTML = `
+            <div class="icon-box">📺</div>
+            <div class="channel-name">${ch.name}</div>
+            <div class="channel-desc" title="${ch.url}">${descText}</div>
+            <div class="play-btn">立即观看 ↗</div>
+          `;
+
+          container.appendChild(card);
+        });
+      }
+
+      // 刷新数据功能
+      async function refreshData() {
+        refreshBtn.disabled = true;
+        const originalText = refreshBtn.innerHTML;
+        refreshBtn.innerHTML = "<span>⏳</span> 抓取中...";
+
+        try {
+          const response = await fetch("/api/scrape", { method: "POST" });
+          const result = await response.json();
+
+          if (response.ok) {
+            alert(`✅ 更新成功！\n共抓取到 ${result.count} 个频道。`);
+            loadChannels(); // 重新加载列表
+          } else {
+            throw new Error(result.details || result.error || "更新失败");
+          }
+        } catch (error) {
+          alert("❌ 更新失败: " + error.message);
+        } finally {
+          refreshBtn.disabled = false;
+          refreshBtn.innerHTML = originalText;
+        }
+      }
+
+      // 页面加载时自动获取数据
+      loadChannels();
+    </script>
+  </body>
+</html>

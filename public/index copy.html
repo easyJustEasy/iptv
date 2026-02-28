@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>电视直播导航</title>
+    <style>
+      :root {
+        --primary-color: #4a90e2;
+        --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        --card-bg: #ffffff;
+        --text-main: #333333;
+        --shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        --radius: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, sans-serif;
+        background: var(--bg-gradient);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 40px;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      header h1 {
+        color: var(--text-main);
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+
+      header p {
+        color: #666;
+        font-size: 0.9rem;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 5px 15px;
+        border-radius: 20px;
+        display: inline-block;
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        width: 90%;
+        max-width: 1000px;
+        padding-bottom: 50px;
+      }
+
+      .channel-card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .channel-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(74, 144, 226, 0.25);
+        border-color: var(--primary-color);
+      }
+
+      .icon-box {
+        width: 70px;
+        height: 70px;
+        background: #f0f7ff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+        transition: transform 0.3s ease;
+      }
+
+      .channel-card:hover .icon-box {
+        transform: scale(1.1) rotate(5deg);
+        background: var(--primary-color);
+        color: white;
+      }
+
+      .channel-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 8px;
+      }
+
+      .channel-desc {
+        font-size: 0.85rem;
+        color: #888;
+        line-height: 1.4;
+      }
+
+      .play-btn {
+        margin-top: 20px;
+        padding: 8px 20px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+      }
+
+      .channel-card:hover .play-btn {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* 提示信息 */
+      .alert-box {
+        margin-top: 20px;
+        padding: 15px 25px;
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        max-width: 600px;
+        text-align: center;
+        display: none; /* 默认隐藏，JS 控制显示 */
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>📺 电视直播导航</h1>
+      <p>由于版权和安全策略，直播将在新标签页中打开</p>
+    </header>
+
+    <div class="container" id="channelList">
+      <!-- JS 生成卡片 -->
+    </div>
+
+    <script>
+      // 数据源
+      const channels = [
+        {
+          name: "北京卫视",
+          url: "https://www.btime.com/btv/btvsy_index",
+          desc: "北京卫视",
+        },
+        {
+          name: "CCTV",
+          url: "https://tv.cctv.com/live/cctv1/",
+          desc: "CCTV",
+        },
+        {
+          name: "cgtn",
+          url: "https://www.cgtn.com/tv",
+          desc: "cgtn",
+        },
+        {
+          name: "第一财经",
+          url: "https://live.kankanews.com/huikan/",
+          desc: "第一财经",
+        },
+        {
+          name: "福建卫视",
+          url: "https://live.fjtv.net/zhpd/",
+          desc: "福建卫视",
+        },
+        {
+          name: "湖南卫视",
+          url: "https://www.mgtv.com/live/?_source_=D",
+          desc: "湖南卫视",
+        },
+        {
+          name: "广东卫视",
+          url: "https://www.gdtv.cn/tvChannelDetail/54",
+          desc: "广东卫视",
+        },
+        {
+          name: "广西卫视",
+          url: "https://tv.gxtv.cn/channel/channelivePlay_e7a7ab7df9fe11e88bcfe41f13b60c62.html",
+          desc: "广西卫视",
+        },
+        {
+          name: "河北卫视",
+          url: "https://www.hebtv.com/19/19js/st/xdszb/index.shtml?index=0",
+          desc: "河北卫视",
+        },
+        {
+          name: "湖北卫视",
+          url: "https://news.hbtv.com.cn/app/tv/433",
+          desc: "湖北卫视",
+        },
+      ];
+
+      const container = document.getElementById("channelList");
+
+      function renderCards() {
+        channels.forEach((ch) => {
+          const card = document.createElement("div");
+          card.className = "channel-card";
+
+          // 点击事件：新窗口打开
+          card.onclick = () => {
+            window.open(ch.url, "_blank");
+          };
+
+          card.innerHTML = `
+                <div class="icon-box">📺</div>
+                <div class="channel-name">${ch.name}</div>
+                <div class="play-btn">立即观看 ↗</div>
+            `;
+
+          container.appendChild(card);
+        });
+      }
+
+      renderCards();
+    </script>
+  </body>
+</html>
