@@ -1,0 +1,14 @@
+node_modules
+.git
+.gitignore
+*.md
+dist
+.turbo
+dist.zip
+docs
+.vscode
+.idea
+.DS_Store
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*

@@ -22,7 +22,7 @@ const CONFIG = {
     linearText: 'Linear Streaming',
     outputFile: path.join(__dirname, 'channels.json'),
     // 【重要】首次运行设为 false，观察是否有人机验证
-    headless: false 
+    headless: true 
 };
 
 async function runScraper() {
@@ -112,9 +112,10 @@ async function runScraper() {
             let href = await linkElem.getAttribute('href');
             if (!name || !href) continue;
 
-            const detailUrl = href.startsWith('http') ? href : `https://www.lyngsat.com${href}`;
+            const detailUrl =  new URL(href, 'https://www.lyngsat.com/stream/tvcountry/').href;
+
             
-            process.stdout.write(`\r⏳ 处理: [${i + 1}/${rows.length}] ${name}`);
+            console.log(`⏳ 处理: [${i + 1}/${rows.length}] ${name}`);
 
             let streamUrl = null;
             try {
@@ -123,15 +124,20 @@ async function runScraper() {
                 await detailPage.waitForTimeout(1000);
 
                 const linearLink = await detailPage.$(`a:text("${CONFIG.linearText}")`);
+
+                console.log(`${name}===> ${detailUrl} `);
                 if (linearLink) {
                     let sHref = await linearLink.getAttribute('href');
                     if (sHref) {
                         streamUrl = sHref.startsWith('http') ? sHref : `https://www.lyngsat.com${sHref}`;
+                        console.log(`${name}===> ${detailUrl} ==== ✅ 成功获取线性流: ${streamUrl}`);
                     }
                 }
                 await detailPage.close();
             } catch (e) {
                 // 忽略单个失败
+                console.log(`${name}===> ${detailUrl} ==== ⚠️ 获取线性流失败，忽略...`);
+                console.error(e);
             }
 
             if (streamUrl) {
