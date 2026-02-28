@@ -1,31 +1,90 @@
-# 1. 基础镜像：使用 Playwright 官方镜像 (已包含 Chromium 和系统依赖)
-# 注意：请根据实际可用的标签调整版本号，v1.56.1 如果不存在，可改用 v1.49.0 或 latest
 FROM node:20-bookworm
-# 设置工作目录
+
+# ==========================================
+# 1. 彻底替换 APT 源（兼容 deb822 格式）
+# ==========================================
+RUN rm -f /etc/apt/sources.list.d/*.sources && \
+    echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm main contrib non-free non-free-firmware" > /etc/apt/sources.list && \
+    echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bookworm-updates main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian-security bookworm-security main contrib non-free non-free-firmware" >> /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl ca-certificates wget gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# ==========================================
+# 2. 设置工作目录与环境变量
+# ==========================================
 WORKDIR /app
 
-# 2. 安装 Node.js (使用 NodeSource 脚本安装 LTS 版本，例如 Node 20)
-# 如果镜像里没有 curl，请先 apt-get update && apt-get install -y curl
-USER root
-# 验证版本
-RUN node -v && npm -v
+# 关键：设置 Playwright 国内镜像（支持 CfT）
+ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
 
-# 3. 复制项目文件
-# 先复制 package.json 和 lock 文件，利用 Docker 缓存层加速构建
+# ==========================================
+# 3. 安装 Node 依赖
+# ==========================================
 COPY package*.json ./
+RUN npm install -g pnpm && pnpm install
 
+# ==========================================
+# 4. 手动安装 Playwright Chromium 所需系统依赖（Bookworm 正确列表）
+# ==========================================
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        libnss3 \
+        libnspr4 \
+        libatk1.0-0 \
+        libatk-bridge2.0-0 \
+        libcups2 \
+        libdrm2 \
+        libxkbcommon0 \
+        libxcomposite1 \
+        libxdamage1 \
+        libxfixes3 \
+        libxrandr2 \
+        libgbm1 \
+        libasound2 \
+        libpango-1.0-0 \
+        libcairo2 \
+        libatspi2.0-0 \
+        libxshmfence1 \
+        libwayland-client0 \
+        libwayland-cursor0 \
+        libwayland-egl1 \
+        libwayland-server0 \
+        libx11-xcb1 \
+        libxcb-dri3-0 \
+        libxcb-shape0 \
+        libxcb-shm0 \
+        libxcb-sync1 \
+        libxcb-xfixes0 \
+        libxcb-randr0 \
+        libxcb-render0 \
+        libx11-6 \
+        libxext6 \
+        libice6 \
+        libsm6 \
+        libfontconfig1 \
+        libfreetype6 \
+        libexpat1 \
+        libffi8 \
+        libdbus-1-3 \
+        libgtk-3-0 \
+        libnotify4 \
+        libsecret-1-0 \
+        # 可选但推荐：避免 headless 模式警告
+        xvfb xauth xfonts-base \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN npm install
+# ==========================================
+# 5. 仅下载浏览器（不依赖 --with-deps）
+# ==========================================
+RUN npx playwright install 
 
-RUN npx playwright install chromium --with-deps
-
-# 复制源代码
+# ==========================================
+# 6. 复制应用代码
+# ==========================================
 COPY . .
 
-
-# 6. 暴露端口 (根据你的 server.js 配置)
 EXPOSE 7000
-
-# 7. 启动命令
-# 假设你的入口文件是 server.js
 CMD ["node", "server.js"]
