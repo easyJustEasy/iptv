@@ -120,8 +120,8 @@ async function runScraper() {
             let streamUrl = null;
             try {
                 const detailPage = await context.newPage();
-                await detailPage.goto(detailUrl, { waitUntil: 'domcontentloaded', timeout: 20000 });
-                await detailPage.waitForTimeout(1000);
+                await detailPage.goto(detailUrl, { waitUntil: 'domcontentloaded', timeout: 200000 });
+                await detailPage.waitForTimeout(10000);
 
                 const linearLink = await detailPage.$(`a:text("${CONFIG.linearText}")`);
 

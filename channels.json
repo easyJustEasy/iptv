@@ -1,10 +1,158 @@
 [
   {
-    "name": "北京卫视",
-    "url": "https://www.btime.com/btv/btvsy_index"
+    "name": "BRTV ILife",
+    "url": "https://www.brtn.cn/btv/btvsy_index"
   },
   {
-    "name": "湖北卫视",
+    "name": "BRTV News",
+    "url": "https://www.brtn.cn/btv/btvsy_index"
+  },
+  {
+    "name": "CCTV 10",
+    "url": "https://tv.cctv.com/live/cctv10"
+  },
+  {
+    "name": "CCTV 13",
+    "url": "https://tv.cctv.com/live/cctv13"
+  },
+  {
+    "name": "CCTV 17",
+    "url": "https://tv.cctv.com/live/cctv17"
+  },
+  {
+    "name": "CCTV 4 America",
+    "url": "https://tv.cctv.com/live/cctvamerica/"
+  },
+  {
+    "name": "CCTV 6",
+    "url": "https://tv.cctv.com/live/cctv6"
+  },
+  {
+    "name": "CCTV 9",
+    "url": "https://tv.cctv.com/live/cctvjilu"
+  },
+  {
+    "name": "CGTN Documentary",
+    "url": "https://www.cgtn.com/channel/documentary"
+  },
+  {
+    "name": "CGTN Russkij",
+    "url": "https://russian.cgtn.com/channel"
+  },
+  {
+    "name": "China Yanbian Satellite TV",
+    "url": "https://www.iybtv.cn/cys/"
+  },
+  {
+    "name": "Fujian Culture & Sports Channel",
+    "url": "https://live.fjtv.net/typd/"
+  },
+  {
+    "name": "Fujian Public Channel",
+    "url": "https://live.fjtv.net/ggpd/"
+  },
+  {
+    "name": "GRTN Cultural Channel",
+    "url": "https://www.gdtv.cn/tvChannelDetail/75"
+  },
+  {
+    "name": "Golden Eagle Cartoon",
+    "url": "https://live.mgtv.com/?channelId=229"
+  },
+  {
+    "name": "Guangdong Documentary",
+    "url": "https://www.gdtv.cn/tvChannelDetail/94"
+  },
+  {
+    "name": "Guangdong News",
+    "url": "https://www.gdtv.cn/tvChannelDetail/45"
+  },
+  {
+    "name": "Guangdong Satellite TV",
+    "url": "https://www.gdtv.cn/tvChannelDetail/43"
+  },
+  {
+    "name": "Guangxi International Channel",
+    "url": "https://tv.gxtv.cn/channel/channelivePlay_bfa17b64157f11e999f0e41f13b60c62.html"
+  },
+  {
+    "name": "Guangxi Movie Channel",
+    "url": "https://tv.gxtv.cn/channel/channelivePlay_5e923d82058e11e9ba67e41f13b60c62.html"
+  },
+  {
+    "name": "Hebei Agriculture Rural and Farmers Channel",
+    "url": "https://www.hebtv.com/19/19js/st/xdszb/index.shtml?index=0"
+  },
+  {
+    "name": "Hebei City",
+    "url": "https://www.hebtv.com/19/19js/st/xdszb/index.shtml?index=0"
+  },
+  {
+    "name": "Hebei TV",
+    "url": "https://www.hebtv.com/19/19js/st/xdszb/index.shtml?index=0"
+  },
+  {
+    "name": "Hubei Comprehensive",
     "url": "https://news.hbtv.com.cn/app/tv/433"
+  },
+  {
+    "name": "Hubei Film & TV",
+    "url": "https://news.hbtv.com.cn/app/tv/435"
+  },
+  {
+    "name": "Hubei Satellite TV",
+    "url": "https://news.hbtv.com.cn/app/tv/431"
+  },
+  {
+    "name": "Hunan TV Series",
+    "url": "https://live.mgtv.com/?channelId=229"
+  },
+  {
+    "name": "Oriental Shopping Daily Selection",
+    "url": "https://www.dfgou.cn/tv.html#/tvLives"
+  },
+  {
+    "name": "Shaanxi TV Mobile",
+    "url": "http://live.snrtv.com/3"
+  },
+  {
+    "name": "Shaanxi TV Sports & Leisure Channel",
+    "url": "http://live.snrtv.com/3"
+  },
+  {
+    "name": "Shandong TV Agricultural Science Channel",
+    "url": "http://v.iqilu.com/live/nkpd/"
+  },
+  {
+    "name": "Shandong TV Life Channel",
+    "url": "http://v.iqilu.com/live/shpd/"
+  },
+  {
+    "name": "Shandong TV Sports Channel",
+    "url": "http://v.iqilu.com/live/typd/"
+  },
+  {
+    "name": "Shanghai News Comprehensive Channel",
+    "url": "https://live.kankanews.com/huikan/"
+  },
+  {
+    "name": "Toonmax TV",
+    "url": "https://live.kankanews.com/huikan/"
+  },
+  {
+    "name": "Zhejiang Children",
+    "url": "https://www.cztv.com/liveTV/108"
+  },
+  {
+    "name": "Zhejiang Haoyigou",
+    "url": "https://www.cztv.com/liveTV/111"
+  },
+  {
+    "name": "Zhejiang Qianjiang Channel",
+    "url": "https://www.cztv.com/liveTV/102"
+  },
+  {
+    "name": "Zhejiang Zhijiang Documentary",
+    "url": "https://www.cztv.com/liveTV/112"
   }
 ]
