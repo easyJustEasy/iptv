@@ -5,7 +5,7 @@ const path = require('path');
 const { exec } = require('child_process');
 
 const app = express();
-const PORT = 3000;
+const PORT = 7000;
 const DATA_FILE = path.join(__dirname, 'channels.json');
 const SCRAPER_SCRIPT = path.join(__dirname, 'scraper.js');
 
